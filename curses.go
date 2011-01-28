@@ -161,16 +161,16 @@ func (win *Window) Getch() int {
 	return int(C.wgetch((*C.WINDOW)(win)));
 }
 
-func (win *Window) Addch(x, y int, c int32, flags int32) {
+func (win *Window) Addch(y, x int, c int32, flags int32) {
 	C.mvwaddch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(c) | C.chtype(flags));
 }
 
 // Since CGO currently can't handle varg C functions we'll mimic the
 // ncurses addstr functions.
-func (win *Window) Addstr(x, y int, str string, flags int32, v ...interface{}) {
+func (win *Window) Addstr(y, x int, str string, flags int32, v ...interface{}) {
 	newstr := fmt.Sprintf(str, v...);
 	
-	win.Move(x, y);
+	win.Move(y, x);
 	
 	for i := 0; i < len(newstr); i++ {
 		C.waddch((*C.WINDOW)(win), C.chtype(newstr[i]) | C.chtype(flags));
@@ -178,7 +178,7 @@ func (win *Window) Addstr(x, y int, str string, flags int32, v ...interface{}) {
 }
 
 // Normally Y is the first parameter passed in curses.
-func (win *Window) Move(x, y int) {
+func (win *Window) Move(y, x int) {
 	C.wmove((*C.WINDOW)(win), C.int(y), C.int(x));
 }
 
