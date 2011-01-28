@@ -157,6 +157,22 @@ func Endwin() os.Error {
 	return nil;
 }
 
+func (win *Window) Getyx() (int, int) {
+	return int(C.getcury((*C.WINDOW)(win))), int(C.getcurx((*C.WINDOW)(win)))
+}
+
+func (win *Window) Getparyx() (int, int) {
+	return int(C.getpary((*C.WINDOW)(win))), int(C.getparx((*C.WINDOW)(win)))
+}
+
+func (win *Window) Getbegyx() (int, int) {
+	return int(C.getbegy((*C.WINDOW)(win))), int(C.getbegx((*C.WINDOW)(win)))
+}
+
+func (win *Window) Getmaxyx() (int, int) {
+	return int(C.getmaxy((*C.WINDOW)(win))), int(C.getmaxx((*C.WINDOW)(win)))
+}
+
 func (win *Window) Getch() int {
 	return int(C.wgetch((*C.WINDOW)(win)));
 }
