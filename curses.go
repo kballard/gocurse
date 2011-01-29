@@ -95,7 +95,7 @@ func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, 
 }
 
 func Start_color() os.Error {
-	if int(C.has_colors()) == 0 {
+	if int(C.has_colors()) != OK {
 		return CursesError{"terminal does not support color"}
 	}
 	C.start_color()
@@ -104,7 +104,7 @@ func Start_color() os.Error {
 }
 
 func Init_pair(pair int, fg int, bg int) os.Error {
-	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == 0 {
+	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) != OK {
 		return CursesError{"Init_pair failed"}
 	}
 	return nil
@@ -115,42 +115,42 @@ func Color_pair(pair int) int32 {
 }
 
 func Noecho() os.Error {
-	if int(C.noecho()) == 0 {
+	if int(C.noecho()) != OK {
 		return CursesError{"Noecho failed"}
 	}
 	return nil
 }
 
 func Echo() os.Error {
-	if int(C.noecho()) == 0 {
+	if int(C.noecho()) != OK {
 		return CursesError{"Echo failed"}
 	}
 	return nil
 }
 
 func Curs_set(c int) os.Error {
-	if C.curs_set(C.int(c)) == 0 {
+	if C.curs_set(C.int(c)) != OK {
 		return CursesError{"Curs_set failed"}
 	}
 	return nil
 }
 
 func Nocbreak() os.Error {
-	if C.nocbreak() == 0 {
+	if C.nocbreak() != OK {
 		return CursesError{"Nocbreak failed"}
 	}
 	return nil
 }
 
 func Cbreak() os.Error {
-	if C.cbreak() == 0 {
+	if C.cbreak() != OK {
 		return CursesError{"Cbreak failed"}
 	}
 	return nil
 }
 
 func Endwin() os.Error {
-	if C.endwin() == 0 {
+	if C.endwin() != OK {
 		return CursesError{"Endwin failed"}
 	}
 	return nil
@@ -233,14 +233,14 @@ func (w *Window) Keypad(tf bool) os.Error {
 	if tf == false {
 		outint = 0
 	}
-	if C.keypad((*C.WINDOW)(w), C.int(outint)) == 0 {
+	if C.keypad((*C.WINDOW)(w), C.int(outint)) != OK {
 		return CursesError{"Keypad failed"}
 	}
 	return nil
 }
 
 func (win *Window) Refresh() os.Error {
-	if C.wrefresh((*C.WINDOW)(win)) == 0 {
+	if C.wrefresh((*C.WINDOW)(win)) != OK {
 		return CursesError{"refresh failed"}
 	}
 	return nil
