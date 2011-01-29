@@ -176,6 +176,14 @@ func (win *Window) Getch() int {
 	return int(C.wgetch((*C.WINDOW)(win)))
 }
 
+func (win *Window) Inch() int {
+	return int(C.winch((*C.WINDOW)(win)))
+}
+
+func (win *Window) Mvinch(y, x int) int {
+	return int(C.mvwinch((*C.WINDOW)(win), C.int(y), C.int(x)))
+}
+
 func (win *Window) Addch(c int32, flags int32) {
 	C.waddch((*C.WINDOW)(win), C.chtype(c)|C.chtype(flags))
 }
@@ -185,11 +193,11 @@ func (win *Window) Mvaddch(y, x int, c int32, flags int32) {
 }
 
 func (win *Window) Insch(c int32, flags int32) {
-	C.winsch((*C.WINDOW)(win), C.chtype(c) | C.chtype(flags))
+	C.winsch((*C.WINDOW)(win), C.chtype(c)|C.chtype(flags))
 }
 
 func (win *Window) Mvinsch(y, x int, c int32, flags int32) {
-	C.mvwinsch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(c) | C.chtype(flags))
+	C.mvwinsch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(c)|C.chtype(flags))
 }
 
 func (win *Window) Delch() {
