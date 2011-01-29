@@ -95,10 +95,10 @@ func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, 
 }
 
 func Start_color() os.Error {
-	if int(C.has_colors()) != OK {
+	C.start_color()
+	if int(C.has_colors()) == C.FALSE {
 		return CursesError{"terminal does not support color"}
 	}
-	C.start_color()
 
 	return nil
 }
