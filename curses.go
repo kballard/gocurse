@@ -8,7 +8,6 @@ package curses
 import "C"
 
 import (
-	"fmt"
 	"os"
 	"unsafe"
 )
@@ -201,16 +200,16 @@ func (win *Window) Mvdelch(y, x int) {
 	C.mvwdelch((*C.WINDOW)(win), C.int(y), C.int(x))
 }
 
-// Since CGO currently can't handle varg C functions we'll mimic the
-// ncurses addstr functions.
-func (win *Window) Addstr(y, x int, str string, flags int32, v ...interface{}) {
-	newstr := fmt.Sprintf(str, v...)
-
-	win.Move(y, x)
-
-	for i := 0; i < len(newstr); i++ {
-		C.waddch((*C.WINDOW)(win), C.chtype(newstr[i])|C.chtype(flags))
+// waddstr() doesn't support attributes, so mimic it by using waddch instead
+func (win *Window) Addstr(str string, flags int32) {
+	for i := 0; i < len(str); i++ {
+		C.waddch((*C.WINDOW)(win), C.chtype(str[i])|C.chtype(flags))
 	}
+}
+
+func (win *Window) Mvaddstr(y, x int, str string, flags int32) {
+	win.Move(y, x)
+	win.Addstr(str, flags)
 }
 
 // Normally Y is the first parameter passed in curses.
