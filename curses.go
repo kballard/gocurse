@@ -114,6 +114,10 @@ func Color_pair(pair int) int32 {
 	return int32(C.COLOR_PAIR(C.int(pair)))
 }
 
+func Pair_number(flags int32) int {
+	return int(C.PAIR_NUMBER(C.int(flags)))
+}
+
 func Noecho() os.Error {
 	if int(C.noecho()) != OK {
 		return CursesError{"Noecho failed"}
@@ -156,11 +160,41 @@ func Endwin() os.Error {
 	return nil
 }
 
-func (win *Window) Color_set(pair int16) os.Error {
-	if C.color_set(C.short(pair), nil) != OK {
+func (win *Window) Color_set(color int16) os.Error {
+	if C.color_set(C.short(color), nil) != OK {
 		return CursesError{"Color_set failed"}
 	}
 	return nil
+}
+
+// Attr_on() and related functions use the WA_ attributes
+func (win *Window) Attr_on(flags int32) {
+	// manpage says return value is irrelevant
+	C.wattr_on((*C.WINDOW)(win), C.attr_t(flags), nil)
+}
+
+func (win *Window) Attr_off(flags int32) {
+	C.wattr_off((*C.WINDOW)(win), C.attr_t(flags), nil)
+}
+
+// sets both attributes and color
+func (win *Window) Attr_set(flags int32, color int16) {
+	C.wattr_set((*C.WINDOW)(win), C.attr_t(flags), C.short(color), nil)
+}
+
+func (win *Window) Attr_get() (flags int32, color int16) {
+	var cflags C.attr_t
+	var cpair C.short
+	C.wattr_get((*C.WINDOW)(win), &cflags, &cpair, nil)
+	return int32(cflags), int16(cpair)
+}
+
+func (win *Window) Chgat(n int, flags int32, color int16) {
+	C.wchgat((*C.WINDOW)(win), C.int(n), C.attr_t(flags), C.short(color), nil)
+}
+
+func (win *Window) Mvchgat(y, x, n int, flags int32, color int16) {
+	C.mvwchgat((*C.WINDOW)(win), C.int(y), C.int(x), C.int(n), C.attr_t(flags), C.short(color), nil)
 }
 
 func (win *Window) Getyx() (int, int) {
