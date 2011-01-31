@@ -13,6 +13,7 @@ const (
 	A_BOLD        = 0x200000
 	A_DIM         = 0x100000
 	A_INVIS       = 0x800000
+	A_NORMAL      = 0
 	A_PROTECT     = 0x1000000
 	A_REVERSE     = 0x40000
 	A_STANDOUT    = 0x10000
@@ -26,6 +27,7 @@ const (
 	WA_DIM        = 0x100000
 	WA_INVIS      = 0x800000
 	WA_LEFT       = 0x4000000
+	WA_NORMAL     = 0
 	WA_PROTECT    = 0x1000000
 	WA_REVERSE    = 0x40000
 	WA_RIGHT      = 0x10000000
