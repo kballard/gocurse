@@ -311,10 +311,30 @@ func (win *Window) Clrtoeol() {
 	C.wclrtoeol((*C.WINDOW)(win))
 }
 
+func (win *Window) Background(colour int32) {
+	C.wbkgd((*C.WINDOW)(win), C.chtype(colour))
+}
+
 func (win *Window) Box(verch, horch int) {
 	C.box((*C.WINDOW)(win), C.chtype(verch), C.chtype(horch))
 }
 
-func (win *Window) Background(colour int32) {
-	C.wbkgd((*C.WINDOW)(win), C.chtype(colour))
+func (win *Window) Border(ls, rs, ts, bs, tl, tr, bl, br int) {
+	C.wborder((*C.WINDOW)(win), C.chtype(ls), C.chtype(rs), C.chtype(ts), C.chtype(bs), C.chtype(tl), C.chtype(tr), C.chtype(bl), C.chtype(br))
+}
+
+func (win *Window) Hline(ch, n int) {
+	C.whline((*C.WINDOW)(win), C.chtype(ch), C.int(n))
+}
+
+func (win *Window) Vline(ch, n int) {
+	C.wvline((*C.WINDOW)(win), C.chtype(ch), C.int(n))
+}
+
+func (win *Window) Mvhline(y, x, ch, n int) {
+	C.mvwhline((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(ch), C.int(n))
+}
+
+func (win *Window) Mvvline(y, x, ch, n int) {
+	C.mvwvline((*C.WINDOW)(win), C.int(y) ,C.int(x), C.chtype(ch), C.int(n))
 }
