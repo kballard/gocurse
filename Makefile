@@ -25,7 +25,7 @@ CLEANFILES+=
 include $(GOROOT)/src/Make.pkg
 
 curses_defs.go: curses.c
-	godefs -g curses curses.c > curses_defs.go
+	godefs -g curses curses.c | gofmt > curses_defs.go
 
 # Simple test programs
 
