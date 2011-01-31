@@ -217,12 +217,12 @@ func (win *Window) Getch() int {
 	return int(C.wgetch((*C.WINDOW)(win)))
 }
 
-func (win *Window) Inch() int {
-	return int(C.winch((*C.WINDOW)(win)))
+func (win *Window) Inch() int32 {
+	return int32(C.winch((*C.WINDOW)(win)))
 }
 
-func (win *Window) Mvinch(y, x int) int {
-	return int(C.mvwinch((*C.WINDOW)(win), C.int(y), C.int(x)))
+func (win *Window) Mvinch(y, x int) int32 {
+	return int32(C.mvwinch((*C.WINDOW)(win), C.int(y), C.int(x)))
 }
 
 func (win *Window) Addch(c int32, flags int32) {
