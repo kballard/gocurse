@@ -6,10 +6,8 @@ include $(GOROOT)/src/Make.inc
 
 TARG=curses
 
-# Can have plain GOFILES too, but this example doesn't.
-
 GOFILES=curses_defs.go
-CGOFILES=curses.go
+CGOFILES=curses.go curses_chars.go
 
 CGO_LDFLAGS=-lncurses
 
