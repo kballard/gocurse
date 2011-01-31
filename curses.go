@@ -156,6 +156,13 @@ func Endwin() os.Error {
 	return nil
 }
 
+func (win *Window) Color_set(pair int16) os.Error {
+	if C.color_set(C.short(pair), nil) != OK {
+		return CursesError{"Color_set failed"}
+	}
+	return nil
+}
+
 func (win *Window) Getyx() (int, int) {
 	return int(C.getcury((*C.WINDOW)(win))), int(C.getcurx((*C.WINDOW)(win)))
 }
