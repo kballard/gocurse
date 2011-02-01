@@ -176,6 +176,17 @@ func (win *Window) Leaveok(bf bool) {
 	C.leaveok((*C.WINDOW)(win), c_bf)
 }
 
+func (win *Window) Nodelay(bf bool) os.Error {
+	c_bf := C.bool(0)
+	if bf {
+		c_bf = 1
+	}
+	if C.nodelay((*C.WINDOW)(win), c_bf) == ERR {
+		return CursesError{"Nodelay failed"}
+	}
+	return nil
+}
+
 // Attr_on() and related functions use the WA_ attributes
 func (win *Window) Attr_on(flags int32) {
 	// manpage says return value is irrelevant
