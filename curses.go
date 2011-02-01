@@ -154,6 +154,14 @@ func Cbreak() os.Error {
 	return nil
 }
 
+func Nl() {
+	C.nl()
+}
+
+func Nonl() {
+	C.nonl()
+}
+
 func Endwin() os.Error {
 	if C.endwin() == ERR {
 		return CursesError{"Endwin failed"}
