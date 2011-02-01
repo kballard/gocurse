@@ -167,6 +167,14 @@ func (win *Window) Color_set(color int16) os.Error {
 	return nil
 }
 
+func (win *Window) Leaveok(bf bool) {
+	c_bf := C.bool(0)
+	if bf {
+		c_bf = 1
+	}
+	C.leaveok((*C.WINDOW)(win), c_bf)
+}
+
 // Attr_on() and related functions use the WA_ attributes
 func (win *Window) Attr_on(flags int32) {
 	// manpage says return value is irrelevant
