@@ -132,11 +132,12 @@ func Echo() os.Error {
 	return nil
 }
 
-func Curs_set(c int) os.Error {
-	if C.curs_set(C.int(c)) == ERR {
-		return CursesError{"Curs_set failed"}
+func Curs_set(c int) (prev int, err os.Error) {
+	val := C.curs_set(C.int(c))
+	if val == ERR {
+		return 0, CursesError{"Curs_set failed"}
 	}
-	return nil
+	return int(val), nil
 }
 
 func Nocbreak() os.Error {
