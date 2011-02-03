@@ -95,12 +95,18 @@ func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, 
 }
 
 func Start_color() os.Error {
-	C.start_color()
-	if int(C.has_colors()) == C.FALSE {
-		return CursesError{"terminal does not support color"}
+	if int(C.start_color()) == ERR {
+		return CursesError{"Start_color failed"}
 	}
 
 	return nil
+}
+
+func Has_colors() bool {
+	if C.has_colors() == C.TRUE {
+		return true
+	}
+	return false
 }
 
 func Init_pair(pair int, fg int, bg int) os.Error {
