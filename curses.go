@@ -110,11 +110,11 @@ func Init_pair(pair int, fg int, bg int) os.Error {
 	return nil
 }
 
-func Color_pair(pair int) int32 {
-	return int32(C.COLOR_PAIR(C.int(pair)))
+func Color_pair(pair int) uint32 {
+	return uint32(C.COLOR_PAIR(C.int(pair)))
 }
 
-func Pair_number(flags int32) int {
+func Pair_number(flags uint32) int {
 	return int(C.PAIR_NUMBER(C.int(flags)))
 }
 
@@ -196,32 +196,32 @@ func (win *Window) Nodelay(bf bool) os.Error {
 }
 
 // Attr_on() and related functions use the WA_ attributes
-func (win *Window) Attr_on(flags int32) {
+func (win *Window) Attr_on(flags uint32) {
 	// manpage says return value is irrelevant
 	C.wattr_on((*C.WINDOW)(win), C.attr_t(flags), nil)
 }
 
-func (win *Window) Attr_off(flags int32) {
+func (win *Window) Attr_off(flags uint32) {
 	C.wattr_off((*C.WINDOW)(win), C.attr_t(flags), nil)
 }
 
 // sets both attributes and color
-func (win *Window) Attr_set(flags int32, color int16) {
+func (win *Window) Attr_set(flags uint32, color int16) {
 	C.wattr_set((*C.WINDOW)(win), C.attr_t(flags), C.short(color), nil)
 }
 
-func (win *Window) Attr_get() (flags int32, color int16) {
+func (win *Window) Attr_get() (flags uint32, color int16) {
 	var cflags C.attr_t
 	var cpair C.short
 	C.wattr_get((*C.WINDOW)(win), &cflags, &cpair, nil)
-	return int32(cflags), int16(cpair)
+	return uint32(cflags), int16(cpair)
 }
 
-func (win *Window) Chgat(n int, flags int32, color int16) {
+func (win *Window) Chgat(n int, flags uint32, color int16) {
 	C.wchgat((*C.WINDOW)(win), C.int(n), C.attr_t(flags), C.short(color), nil)
 }
 
-func (win *Window) Mvchgat(y, x, n int, flags int32, color int16) {
+func (win *Window) Mvchgat(y, x, n int, flags uint32, color int16) {
 	C.mvwchgat((*C.WINDOW)(win), C.int(y), C.int(x), C.int(n), C.attr_t(flags), C.short(color), nil)
 }
 
@@ -245,27 +245,27 @@ func (win *Window) Getch() int {
 	return int(C.wgetch((*C.WINDOW)(win)))
 }
 
-func (win *Window) Inch() int32 {
-	return int32(C.winch((*C.WINDOW)(win)))
+func (win *Window) Inch() uint32 {
+	return uint32(C.winch((*C.WINDOW)(win)))
 }
 
-func (win *Window) Mvinch(y, x int) int32 {
-	return int32(C.mvwinch((*C.WINDOW)(win), C.int(y), C.int(x)))
+func (win *Window) Mvinch(y, x int) uint32 {
+	return uint32(C.mvwinch((*C.WINDOW)(win), C.int(y), C.int(x)))
 }
 
-func (win *Window) Addch(c int32, flags int32) {
+func (win *Window) Addch(c uint32, flags uint32) {
 	C.waddch((*C.WINDOW)(win), C.chtype(c)|C.chtype(flags))
 }
 
-func (win *Window) Mvaddch(y, x int, c int32, flags int32) {
+func (win *Window) Mvaddch(y, x int, c uint32, flags uint32) {
 	C.mvwaddch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(c)|C.chtype(flags))
 }
 
-func (win *Window) Insch(c int32, flags int32) {
+func (win *Window) Insch(c uint32, flags uint32) {
 	C.winsch((*C.WINDOW)(win), C.chtype(c)|C.chtype(flags))
 }
 
-func (win *Window) Mvinsch(y, x int, c int32, flags int32) {
+func (win *Window) Mvinsch(y, x int, c uint32, flags uint32) {
 	C.mvwinsch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(c)|C.chtype(flags))
 }
 
@@ -278,13 +278,13 @@ func (win *Window) Mvdelch(y, x int) {
 }
 
 // waddstr() doesn't support attributes, so mimic it by using waddch instead
-func (win *Window) Addstr(str string, flags int32) {
+func (win *Window) Addstr(str string, flags uint32) {
 	for i := 0; i < len(str); i++ {
 		C.waddch((*C.WINDOW)(win), C.chtype(str[i])|C.chtype(flags))
 	}
 }
 
-func (win *Window) Mvaddstr(y, x int, str string, flags int32) {
+func (win *Window) Mvaddstr(y, x int, str string, flags uint32) {
 	win.Move(y, x)
 	win.Addstr(str, flags)
 }
@@ -339,30 +339,30 @@ func (win *Window) Clrtoeol() {
 	C.wclrtoeol((*C.WINDOW)(win))
 }
 
-func (win *Window) Background(colour int32) {
+func (win *Window) Background(colour uint32) {
 	C.wbkgd((*C.WINDOW)(win), C.chtype(colour))
 }
 
-func (win *Window) Box(verch, horch int32) {
+func (win *Window) Box(verch, horch uint32) {
 	C.box((*C.WINDOW)(win), C.chtype(verch), C.chtype(horch))
 }
 
-func (win *Window) Border(ls, rs, ts, bs, tl, tr, bl, br int32) {
+func (win *Window) Border(ls, rs, ts, bs, tl, tr, bl, br uint32) {
 	C.wborder((*C.WINDOW)(win), C.chtype(ls), C.chtype(rs), C.chtype(ts), C.chtype(bs), C.chtype(tl), C.chtype(tr), C.chtype(bl), C.chtype(br))
 }
 
-func (win *Window) Hline(ch int32, n int) {
+func (win *Window) Hline(ch uint32, n int) {
 	C.whline((*C.WINDOW)(win), C.chtype(ch), C.int(n))
 }
 
-func (win *Window) Vline(ch int32, n int) {
+func (win *Window) Vline(ch uint32, n int) {
 	C.wvline((*C.WINDOW)(win), C.chtype(ch), C.int(n))
 }
 
-func (win *Window) Mvhline(y, x int, ch int32, n int) {
+func (win *Window) Mvhline(y, x int, ch uint32, n int) {
 	C.mvwhline((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(ch), C.int(n))
 }
 
-func (win *Window) Mvvline(y, x int, ch int32, n int) {
-	C.mvwvline((*C.WINDOW)(win), C.int(y) ,C.int(x), C.chtype(ch), C.int(n))
+func (win *Window) Mvvline(y, x int, ch uint32, n int) {
+	C.mvwvline((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(ch), C.int(n))
 }
