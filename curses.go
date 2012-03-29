@@ -1,5 +1,6 @@
 package curses
 
+// #cgo LDFLAGS: -lncurses
 // struct ldat{};
 // struct _win_st{};
 // #define _Bool int
@@ -7,10 +8,7 @@ package curses
 // #include <curses.h>
 import "C"
 
-import (
-	"os"
-	"unsafe"
-)
+import "unsafe"
 
 type void unsafe.Pointer
 
@@ -20,7 +18,7 @@ type CursesError struct {
 	message string
 }
 
-func (ce CursesError) String() string {
+func (ce CursesError) Error() string {
 	return ce.message
 }
 
@@ -54,7 +52,7 @@ func init() {
 	Tabsize = (*int)(void(&C.TABSIZE))
 }
 
-func Initscr() (*Window, os.Error) {
+func Initscr() (*Window, error) {
 	Stdwin = (*Window)(C.initscr())
 
 	if Stdwin == nil {
@@ -64,7 +62,7 @@ func Initscr() (*Window, os.Error) {
 	return Stdwin, nil
 }
 
-func Newwin(rows int, cols int, starty int, startx int) (*Window, os.Error) {
+func Newwin(rows int, cols int, starty int, startx int) (*Window, error) {
 	nw := (*Window)(C.newwin(C.int(rows), C.int(cols), C.int(starty), C.int(startx)))
 
 	if nw == nil {
@@ -74,7 +72,7 @@ func Newwin(rows int, cols int, starty int, startx int) (*Window, os.Error) {
 	return nw, nil
 }
 
-func (win *Window) Subwin(rows int, cols int, starty int, startx int) (*Window, os.Error) {
+func (win *Window) Subwin(rows int, cols int, starty int, startx int) (*Window, error) {
 	sw := (*Window)(C.subwin((*C.WINDOW)(win), C.int(rows), C.int(cols), C.int(starty), C.int(startx)))
 
 	if sw == nil {
@@ -84,7 +82,7 @@ func (win *Window) Subwin(rows int, cols int, starty int, startx int) (*Window, 
 	return sw, nil
 }
 
-func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, os.Error) {
+func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, error) {
 	dw := (*Window)(C.derwin((*C.WINDOW)(win), C.int(rows), C.int(cols), C.int(starty), C.int(startx)))
 
 	if dw == nil {
@@ -94,7 +92,7 @@ func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, 
 	return dw, nil
 }
 
-func Start_color() os.Error {
+func Start_color() error {
 	if int(C.start_color()) == ERR {
 		return CursesError{"Start_color failed"}
 	}
@@ -109,7 +107,7 @@ func Has_colors() bool {
 	return false
 }
 
-func Init_pair(pair int, fg int, bg int) os.Error {
+func Init_pair(pair int, fg int, bg int) error {
 	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == ERR {
 		return CursesError{"Init_pair failed"}
 	}
@@ -124,21 +122,21 @@ func Pair_number(flags uint32) int {
 	return int(C.PAIR_NUMBER(C.int(flags)))
 }
 
-func Noecho() os.Error {
+func Noecho() error {
 	if int(C.noecho()) == ERR {
 		return CursesError{"Noecho failed"}
 	}
 	return nil
 }
 
-func Echo() os.Error {
+func Echo() error {
 	if int(C.noecho()) == ERR {
 		return CursesError{"Echo failed"}
 	}
 	return nil
 }
 
-func Curs_set(c int) (prev int, err os.Error) {
+func Curs_set(c int) (prev int, err error) {
 	val := C.curs_set(C.int(c))
 	if val == ERR {
 		return 0, CursesError{"Curs_set failed"}
@@ -146,14 +144,14 @@ func Curs_set(c int) (prev int, err os.Error) {
 	return int(val), nil
 }
 
-func Nocbreak() os.Error {
+func Nocbreak() error {
 	if C.nocbreak() == ERR {
 		return CursesError{"Nocbreak failed"}
 	}
 	return nil
 }
 
-func Cbreak() os.Error {
+func Cbreak() error {
 	if C.cbreak() == ERR {
 		return CursesError{"Cbreak failed"}
 	}
@@ -168,14 +166,14 @@ func Nonl() {
 	C.nonl()
 }
 
-func Endwin() os.Error {
+func Endwin() error {
 	if C.endwin() == ERR {
 		return CursesError{"Endwin failed"}
 	}
 	return nil
 }
 
-func (win *Window) Color_set(color int16) os.Error {
+func (win *Window) Color_set(color int16) error {
 	if C.color_set(C.short(color), nil) == ERR {
 		return CursesError{"Color_set failed"}
 	}
@@ -190,7 +188,7 @@ func (win *Window) Leaveok(bf bool) {
 	C.leaveok((*C.WINDOW)(win), c_bf)
 }
 
-func (win *Window) Nodelay(bf bool) os.Error {
+func (win *Window) Nodelay(bf bool) error {
 	c_bf := C.bool(0)
 	if bf {
 		c_bf = 1
@@ -300,7 +298,7 @@ func (win *Window) Move(y, x int) {
 	C.wmove((*C.WINDOW)(win), C.int(y), C.int(x))
 }
 
-func (w *Window) Keypad(tf bool) os.Error {
+func (w *Window) Keypad(tf bool) error {
 	var outint int
 	if tf == true {
 		outint = 1
@@ -314,7 +312,7 @@ func (w *Window) Keypad(tf bool) os.Error {
 	return nil
 }
 
-func (win *Window) Refresh() os.Error {
+func (win *Window) Refresh() error {
 	if C.wrefresh((*C.WINDOW)(win)) == ERR {
 		return CursesError{"refresh failed"}
 	}

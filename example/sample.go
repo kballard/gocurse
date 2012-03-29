@@ -1,6 +1,6 @@
 package main
 
-import . "curses"
+import . ".."
 import "os"
 import "fmt"
 
@@ -29,7 +29,7 @@ func startGoCurses() {
 	Stdwin.Keypad(true);
 	
 	if err := Start_color(); err != nil {
-		fmt.Printf("%s\n", err.String());
+		fmt.Printf("%s\n", err);
 		stopGoCurses();
 		os.Exit(1);
 	}
@@ -41,7 +41,7 @@ func stopGoCurses() {
 
 func loop(x, y int) {
 	for {
-		Stdwin.Addstr(0, 0, "Hello,\nworld!", 0);
+		Stdwin.Mvaddstr(0, 0, "Hello,\nworld!", 0);
 		inp := Stdwin.Getch();
 		if inp == 'q' {
 			break;
@@ -59,7 +59,7 @@ func loop(x, y int) {
 			y = y + 1;
 		}
 		Stdwin.Clear();
-		Stdwin.Addch(x, y, '@', Color_pair(1));
+		Stdwin.Mvaddch(x, y, '@', Color_pair(1));
 		Stdwin.Refresh();
 	}
 }
