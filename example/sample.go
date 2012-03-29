@@ -1,6 +1,6 @@
 package main
 
-import . ".."
+import . "../curses"
 import "os"
 import "fmt"
 
